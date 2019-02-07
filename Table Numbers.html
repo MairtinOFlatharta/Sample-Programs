@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+	var nums = [ ];
+	function addNumber() {
+		var txt = document.getElementById("txtNumber").value;
+		var number = parseInt(txt);
+		if (isNaN(number))
+			alert(txt+" is not a number!");
+		else {
+			nums.push(number);
+			redrawTable();
+		}
+	}
+
+	function redrawTable() {
+		var table = "<table border = '1'>";
+		for(i = 0; i<nums.length; i++){
+			table+="<tr><td>"+nums[i]+"</td><td><button onclick = 'deleteNum("+i+");'>Delete</button></td></tr>";
+		}
+		table+="</table>"
+		document.getElementById("pOutput").innerHTML = table;
+	}
+	
+	function deleteNum(i){
+		nums.splice(i, 1);
+		redrawTable();
+	}
+</script>
+</head>
+<body>
+	<input type='text' id='txtNumber'> <button onclick='addNumber();'>Add Number</button>
+	<p id="pOutput"></p>
+</body>
+</html>
