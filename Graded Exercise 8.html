@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		th
+		{
+			background-color: #269350;
+			width: 50px;
+			height: 25px;
+		}
+		
+		td
+		{
+			background-color: #C9E8D5;
+			width: 50px;
+			height: 25px;
+		}
+		
+		.empty
+		{
+			background-color: #CAD1CD;
+		}
+	</style>
+	
+	<script>
+	
+		function getNums(){
+			var valid_input = false;
+			while (!valid_input){//Keep looping until valid inputs are entered
+				userYear = parseInt(prompt("What year's calender would you like to view?(Must be after 1900)"));
+				userMonth = parseInt(prompt("Which month would you like to view?(1 = January, 12 = December)"));
+				if (userYear < 1900 || userMonth <= 0 || userMonth > 12){
+					window.alert("Invalid parameters entered");//Check if values entered are valid. If not, end program
+				}
+				else valid_input = true;
+			}
+			buildTable(num_days_month(userMonth, userYear), first_day(userYear, userMonth));
+		}
+		
+		function num_days_month(month, year){
+			if (month == 9 || month == 4 || month == 6 || month == 11){
+				return 30;
+			}
+			if(month != 2){
+				return 31;
+			}
+			return(28+is_leap(year));
+		}
+		
+		function is_leap(year){
+			if (year % 400 == 0) return 1;
+			if (year % 100 == 0) return 0;
+			if (year % 4 == 0) return 1;
+			return 0;
+		}
+		
+		function new_years_day(year){
+			var day = 1;
+			for(var i = 1900; i<year; i++){
+				day+=365+is_leap(i);
+			}
+			return (day % 7);
+		}
+		
+		function first_day(year, month) {
+			var daynumber = new_years_day(year);
+			for (var i=1; i<month; i++){ 
+				daynumber+=num_days_month(i, year);
+			}
+			daynumber %= 7;
+			return daynumber;
+		}
+		
+		function buildTable(numDays, firstDay){
+			var currentDay = 1;//Variable to keep track of days on calender
+			
+			tableHTML = "<table border = '1'><tr><th>Sun</th><th>Mon</th><th>Tues</th><th>Wed</th><th>Thurs</th><th>Fri</th><th>Sat</th><tr>";
+			for(var i = 0; i < firstDay; i++){//Filling in the cells before day 1, classifying them as empty
+				tableHTML += "<td class = 'empty'></td>";
+			}
+			while(currentDay <= numDays){
+				tableHTML += "<td>"+currentDay+"</td>";//Building up cells in table
+				if ((currentDay+firstDay)%7 == 0){//If we have reached 7 cells in a row, create a new row to begin a new week
+					tableHTML += "</tr><tr>";
+				}
+				currentDay++;
+			}
+			while((currentDay+firstDay)%7 != 1){//Filling in the final week with empty cells, classifying them as empty
+				tableHTML += "<td class = 'empty'></td>";
+				currentDay++;
+			}
+			tableHTML += "</tr></table>";//Close up last row and the whole table
+			document.getElementById("mainContent").innerHTML = tableHTML;
+		}
+	</script>
+	
+</head>
+<body onload = "getNums();">
+	<div id = "mainContent"></div>
+</body>
+</html>
